@@ -41,7 +41,7 @@ public class User {
     /**
      * 性别
      */
-    private Byte gender;
+    private Integer gender;
 
     /**
      * 密码
@@ -76,5 +76,5 @@ public class User {
     /**
      * 是否删除
      */
-    private Byte isDelete;
+    private Integer isDelete;
 }
