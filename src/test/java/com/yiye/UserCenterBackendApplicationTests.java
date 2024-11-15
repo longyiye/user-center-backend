@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.util.Assert;
+import org.springframework.util.DigestUtils;
 
 import java.util.List;
 
@@ -21,5 +22,13 @@ class UserCenterBackendApplicationTests {
         List<User> userList = userMapper.selectList(null);
         Assert.isTrue(5 == userList.size(), "");
         userList.forEach(System.out::println);
+    }
+
+    @Test
+    void testDigest() {
+        System.out.println("加密测试");
+        final String SALT = "yiye";
+        String encryptPassword = DigestUtils.md5DigestAsHex((SALT + "123456").getBytes());
+        System.out.println(encryptPassword);
     }
 }

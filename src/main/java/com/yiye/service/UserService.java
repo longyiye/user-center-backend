@@ -10,4 +10,13 @@ import com.yiye.entity.User;
  */
 public interface UserService extends IService<User> {
 
+    /**
+     * userRegister
+     *
+     * @param userAccount   String
+     * @param userPassword  String
+     * @param checkPassword String
+     * @return long
+     */
+    long userRegister(String userAccount, String userPassword, String checkPassword);
 }
