@@ -3,6 +3,8 @@ package com.yiye.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.yiye.entity.User;
 
+import javax.servlet.http.HttpServletRequest;
+
 /**
  * @author longyiye
  * @description 针对表【t_user(用户表)】的数据库操作Service
@@ -19,4 +21,13 @@ public interface UserService extends IService<User> {
      * @return long
      */
     long userRegister(String userAccount, String userPassword, String checkPassword);
+
+    /**
+     * userLogin
+     *
+     * @param userAccount  String
+     * @param userPassword String
+     * @return User
+     */
+    User userLogin(String userAccount, String userPassword, HttpServletRequest request);
 }
