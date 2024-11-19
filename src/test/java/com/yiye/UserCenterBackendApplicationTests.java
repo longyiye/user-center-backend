@@ -20,7 +20,7 @@ class UserCenterBackendApplicationTests {
     void contextLoads() {
         System.out.println("测试查找全部数据");
         List<User> userList = userMapper.selectList(null);
-        Assert.isTrue(5 == userList.size(), "");
+        Assert.isTrue(8 == userList.size(), "");
         userList.forEach(System.out::println);
     }
 

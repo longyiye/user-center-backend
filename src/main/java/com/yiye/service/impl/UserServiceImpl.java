@@ -15,6 +15,9 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static com.yiye.constant.UserConstant.SALT;
+import static com.yiye.constant.UserConstant.USER_LOGIN_STATE;
+
 /**
  * @author longyiye
  * @description 针对表【t_user(用户表)】的数据库操作Service实现
@@ -24,11 +27,6 @@ import java.util.regex.Pattern;
 @Slf4j
 public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         implements UserService {
-
-    // 盐值：用于混淆密码
-    private static final String SALT = "yiye";
-    // 用户登录态
-    private static final String USER_LOGIN_STATE = "userLoginState";
 
     @Resource
     private UserMapper userMapper;
@@ -91,19 +89,26 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         }
 
         /* 3. 用户脱敏 */
-        User safetyUser = new User();
-        safetyUser.setId(user.getId());
-        safetyUser.setUserName(user.getUserName());
-        safetyUser.setUserAccount(user.getUserAccount());
-        safetyUser.setAvatarUrl(user.getAvatarUrl());
-        safetyUser.setGender(user.getGender());
-        safetyUser.setPhone(user.getPhone());
-        safetyUser.setEmail(user.getEmail());
-        safetyUser.setUserStatus(user.getUserStatus());
-        safetyUser.setCreateTime(user.getCreateTime());
+        User safetyUser = getSafetyUser(user);
 
         /* 4. 记录用户的登录态 */
         request.getSession().setAttribute(USER_LOGIN_STATE, safetyUser);
+        return safetyUser;
+    }
+
+    @Override
+    public User getSafetyUser(User originUser) {
+        User safetyUser = new User();
+        safetyUser.setId(originUser.getId());
+        safetyUser.setUserName(originUser.getUserName());
+        safetyUser.setUserAccount(originUser.getUserAccount());
+        safetyUser.setAvatarUrl(originUser.getAvatarUrl());
+        safetyUser.setGender(originUser.getGender());
+        safetyUser.setPhone(originUser.getPhone());
+        safetyUser.setEmail(originUser.getEmail());
+        safetyUser.setUserRole(originUser.getUserRole());
+        safetyUser.setUserStatus(originUser.getUserStatus());
+        safetyUser.setCreateTime(originUser.getCreateTime());
         return safetyUser;
     }
 }

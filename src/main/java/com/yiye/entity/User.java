@@ -1,6 +1,7 @@
 package com.yiye.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.baomidou.mybatisplus.annotation.TableName;
@@ -9,19 +10,23 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
 import java.util.Date;
 
+/**
+ * 用户表
+ * @TableName t_user
+ */
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@TableName("t_user")
-public class User {
-
+@TableName(value ="t_user")
+public class User implements Serializable {
     /**
      * id
      */
-    @TableId(value = "id", type = IdType.AUTO)
+    @TableId(type = IdType.AUTO)
     private Long id;
 
     /**
@@ -79,4 +84,12 @@ public class User {
      */
     @TableLogic
     private Integer isDelete;
+
+    /**
+     * 用户角色：0 普通用户 1 管理员
+     */
+    private Integer userRole;
+
+    @TableField(exist = false)
+    private static final long serialVersionUID = 1L;
 }
