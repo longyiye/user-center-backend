@@ -80,4 +80,16 @@ public class UserController {
         User user = (User) userObj;
         return user != null && user.getUserRole() == ADMIN_ROLE;
     }
+
+    @GetMapping("/current")
+    public User getCurrentUser(HttpServletRequest request) {
+        Object userObj = request.getSession().getAttribute(USER_LOGIN_STATE);
+        User currentUser = (User) userObj;
+        if (currentUser == null) return null;
+        long userId = currentUser.getId();
+
+        // todo 校验用户是否合法
+        User user = userService.getById(userId);
+        return userService.getSafetyUser(user);
+    }
 }
