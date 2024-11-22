@@ -85,6 +85,7 @@ public class UserController {
     public User getCurrentUser(HttpServletRequest request) {
         Object userObj = request.getSession().getAttribute(USER_LOGIN_STATE);
         User currentUser = (User) userObj;
+
         if (currentUser == null) return null;
         long userId = currentUser.getId();
 
