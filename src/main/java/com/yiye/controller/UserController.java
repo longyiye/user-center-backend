@@ -85,7 +85,12 @@ public class UserController {
     public User getCurrentUser(HttpServletRequest request) {
         Object userObj = request.getSession().getAttribute(USER_LOGIN_STATE);
         User currentUser = (User) userObj;
-        if (currentUser == null) return null;
+
+        // todo 这里不能直接返回 null，前端会无法跳转页面，需优化
+        if (currentUser == null) {
+            User userNull = new User();
+            return userNull;
+        }
         long userId = currentUser.getId();
 
         // todo 校验用户是否合法
