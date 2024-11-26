@@ -2,7 +2,9 @@ package com.yiye.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.yiye.common.ErrorCode;
 import com.yiye.entity.User;
+import com.yiye.exception.BusinessException;
 import com.yiye.mapper.UserMapper;
 import com.yiye.service.UserService;
 import lombok.extern.slf4j.Slf4j;
@@ -19,9 +21,10 @@ import static com.yiye.constant.UserConstant.SALT;
 import static com.yiye.constant.UserConstant.USER_LOGIN_STATE;
 
 /**
+ * 用户服务实现类
+ *
  * @author longyiye
- * @description 针对表【t_user(用户表)】的数据库操作Service实现
- * @createDate 2024-11-15 11:01:47
+ * @link <a href="https://github.com/longyiye/user-center-backend></a>
  */
 @Service
 @Slf4j
@@ -31,15 +34,29 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
     @Resource
     private UserMapper userMapper;
 
+    /**
+     * 用户注册
+     *
+     * @param userAccount   String
+     * @param userPassword  String
+     * @param checkPassword String
+     * @return long
+     */
     @Override
     public long userRegister(String userAccount, String userPassword, String checkPassword) {
         /* 1. 校验 */
         // 账户密码非空
-        if (StringUtils.isAnyBlank(userAccount, userPassword, checkPassword)) return -1;
+        if (StringUtils.isAnyBlank(userAccount, userPassword, checkPassword)) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR, "参数为空");
+        }
         // 账户不小于 4 位
-        if (userAccount.length() < 4) return -1;
-        // 密码不小于 8 位
-        if (userPassword.length() < 8 || checkPassword.length() < 8) return -1;
+        if (userAccount.length() < 4) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR, "用户账号过短");
+        }
+        // 密码不小于 4 位
+        if (userPassword.length() < 4 || checkPassword.length() < 4) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR, "用户密码过短");
+        }
         // 账户不能包含特殊字符
         String validateRegExp = "[^a-zA-Z0-9]";
         Matcher matcher = Pattern.compile(validateRegExp).matcher(userAccount);
@@ -50,7 +67,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         QueryWrapper<User> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("user_account", userAccount);
         Long count = userMapper.selectCount(queryWrapper);
-        if (count > 0) return -1;
+        if (count > 0) throw new BusinessException(ErrorCode.PARAMS_ERROR, "账号重复");
 
         /* 2. 加密 */
         String encryptPassword = DigestUtils.md5DigestAsHex((SALT + userPassword).getBytes());
@@ -64,12 +81,20 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         return user.getId();
     }
 
+    /**
+     * 用户登录
+     *
+     * @param userAccount  UserAccount
+     * @param userPassword UserPassword
+     * @param request      HttpServletRequest
+     * @return User
+     */
     @Override
     public User userLogin(String userAccount, String userPassword, HttpServletRequest request) {
         /* 1. 校验 */
         if (StringUtils.isAnyBlank(userAccount, userPassword)) return null;
         if (userAccount.length() < 4) return null;
-        if (userPassword.length() < 8) return null;
+        if (userPassword.length() < 4) return null;
         // 账户不能包含特殊字符
         String validPattern = "[^a-zA-Z0-9]";
         Matcher matcher = Pattern.compile(validPattern).matcher(userAccount);
@@ -96,6 +121,12 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         return safetyUser;
     }
 
+    /**
+     * 用户脱敏
+     *
+     * @param originUser User
+     * @return User
+     */
     @Override
     public User getSafetyUser(User originUser) {
         if (originUser == null) return null;
@@ -113,6 +144,12 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         return safetyUser;
     }
 
+    /**
+     * 用户注销
+     *
+     * @param request HttpServletRequest
+     * @return int
+     */
     @Override
     public int userLogout(HttpServletRequest request) {
         request.getSession().removeAttribute(USER_LOGIN_STATE);  // 移除登录态

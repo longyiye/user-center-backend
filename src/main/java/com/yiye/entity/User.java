@@ -14,8 +14,10 @@ import java.io.Serializable;
 import java.util.Date;
 
 /**
- * 用户表
- * @TableName t_user
+ * 用户实体类
+ *
+ * @author longyiye
+ * @link <a href="https://github.com/longyiye/user-center-backend></a>
  */
 @Data
 @Builder

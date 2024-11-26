@@ -6,14 +6,15 @@ import com.yiye.entity.User;
 import javax.servlet.http.HttpServletRequest;
 
 /**
+ * 用户服务
+ *
  * @author longyiye
- * @description 针对表【t_user(用户表)】的数据库操作Service
- * @createDate 2024-11-15 11:01:47
+ * @link <a href="https://github.com/longyiye/user-center-backend></a>
  */
 public interface UserService extends IService<User> {
 
     /**
-     * userRegister
+     * 用户注册
      *
      * @param userAccount   String
      * @param userPassword  String
@@ -23,7 +24,7 @@ public interface UserService extends IService<User> {
     long userRegister(String userAccount, String userPassword, String checkPassword);
 
     /**
-     * userLogin
+     * 用户登录
      *
      * @param userAccount  String
      * @param userPassword String
@@ -33,18 +34,18 @@ public interface UserService extends IService<User> {
     User userLogin(String userAccount, String userPassword, HttpServletRequest request);
 
     /**
-     * getSafetyUser
+     * 用户脱敏
      *
-     * @param OriginUser User
+     * @param originUser User
      * @return User
      */
-    User getSafetyUser(User OriginUser);
+    User getSafetyUser(User originUser);
 
     /**
-     * userLogout
+     * 用户注销
      *
      * @param request HttpServletRequest
-     * @return void
+     * @return int
      */
     int userLogout(HttpServletRequest request);
 }
