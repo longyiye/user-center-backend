@@ -93,4 +93,10 @@ public class UserController {
         User user = userService.getById(userId);
         return userService.getSafetyUser(user);
     }
+
+    @PostMapping("/logout")
+    public Integer userLogout(HttpServletRequest request) {
+        if (request == null) return null;
+        return userService.userLogout(request);
+    }
 }
