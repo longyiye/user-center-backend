@@ -1,0 +1,26 @@
+spring:
+#  application:
+#    name: user-center-backend
+
+  # DataSource Config
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    # 如果安装了多版本的 MySQL ，此处需要修改端口号
+    url: jdbc:mysql://localhost:3306/user_center
+    username: root
+    password: 123456
+  session:
+    timeout: 86400  # 设置失效时间
+
+server:
+#  port: 8080
+#  servlet:
+#    context-path: /api
+    address: 0.0.0.0
+
+#mybatis-plus:
+#  global-config:
+#    db-config:
+#      logic-delete-field: isDelete  # 全局逻辑删除字段名
+#      logic-delete-value: 1         # 逻辑已删除值
+#      logic-not-delete-value: 0     # 逻辑未删除值
